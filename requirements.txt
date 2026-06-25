@@ -1,19 +1,58 @@
-chromadb
-openai
+# ── LLM & Agent Framework ────────────────────────────────────
 langchain
 langchain-openai
+langchain-groq
 langchain-community
-sentence-transformers
-docling
-yt-dlp
-youtube-transcript-api
-duckduckgo-search
-fastmcp
-mcp
-streamlit
+langchain-text-splitters
 langgraph
-pydantic
+openai
 groq
-python-dotenv
-pytest
+
+# ── MCP (Model Context Protocol) ─────────────────────────────
+mcp
+fastmcp
+
+# ── Vector Database ───────────────────────────────────────────
+chromadb
+
+# ── Embeddings ────────────────────────────────────────────────
+sentence-transformers
+
+# ── Hybrid Retrieval ──────────────────────────────────────────
+rank-bm25
+
+# ── Document Parsing & OCR ────────────────────────────────────
+docling
+rapidocr-onnxruntime
+pymupdf
+pillow
+
+# ── Tokenization & Chunking ───────────────────────────────────
+tiktoken
+
+# ── Audio & Video Transcription ───────────────────────────────
+faster-whisper
+imageio-ffmpeg
+
+# ── External Source Connectors ────────────────────────────────
+youtube-transcript-api
+yt-dlp
+
+# ── Web Enrichment ────────────────────────────────────────────
+ddgs
+trafilatura
+
+# ── UI ────────────────────────────────────────────────────────
+streamlit
+
+# ── HTTP Client ───────────────────────────────────────────────
 httpx
+
+# ── Schemas & Validation ──────────────────────────────────────
+pydantic
+
+# ── Environment ───────────────────────────────────────────────
+python-dotenv
+
+# ── Testing ───────────────────────────────────────────────────
+pytest

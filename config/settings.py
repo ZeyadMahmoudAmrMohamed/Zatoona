@@ -13,7 +13,7 @@ GROQ_MODEL   = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 # ── Team B — Exam Generator (Lightning AI)
 LIGHTNING_API_KEY = os.getenv("LIGHTNING_API_KEY")
 BASE_URL          = os.getenv("LIGHTNING_BASE_URL", "https://lightning.ai/api/v1/")
-MODEL_NAME        = os.getenv("MODEL_NAME")
+MODEL_NAME_B        = os.getenv("MODEL_NAME_B")
 MAX_VALIDATION_ITERATIONS = int(os.getenv("MAX_VALIDATION_ITERATIONS", "3"))
 MOCK_MCP_PATH = os.getenv(
     "MOCK_MCP_PATH",
