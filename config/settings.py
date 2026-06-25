@@ -13,7 +13,7 @@ GROQ_MODEL   = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 # ── Team B — Exam Generator (Lightning AI)
 LIGHTNING_API_KEY = os.getenv("LIGHTNING_API_KEY")
 BASE_URL          = os.getenv("LIGHTNING_BASE_URL", "https://lightning.ai/api/v1/")
-MODEL_NAME_B        = os.getenv("MODEL_NAME_B")
+MODEL_NAME = os.getenv("LIGHTNING_MODEL_NAME")
 MAX_VALIDATION_ITERATIONS = int(os.getenv("MAX_VALIDATION_ITERATIONS", "3"))
 MOCK_MCP_PATH = os.getenv(
     "MOCK_MCP_PATH",
@@ -22,7 +22,7 @@ MOCK_MCP_PATH = os.getenv(
 
 # ── Team A — Vector DB and MCP Server (OpenAI embeddings)
 OPENAI_API_KEY         = os.getenv("OPENAI_API_KEY")
-EMBEDDING_MODEL        = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
 EMBEDDING_PROVIDER     = os.getenv("EMBEDDING_PROVIDER", "auto").lower()
 LOCAL_EMBEDDING_MODEL  = os.getenv("LOCAL_EMBEDDING_MODEL", "BAAI/bge-small-en-v1.5")
 CHROMA_PERSIST_DIR     = os.getenv("CHROMA_PERSIST_DIR", "./chroma_db")
