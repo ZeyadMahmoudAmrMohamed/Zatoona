@@ -16,3 +16,4 @@ pydantic
 groq
 python-dotenv
 pytest
+httpx
