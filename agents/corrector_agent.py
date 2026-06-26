@@ -8,7 +8,6 @@ from config.settings import GROQ_API_KEY, GROQ_MODEL
 from mcp_server.mcp_client import get_chunk_by_id
 
 # ── LLM setup ───────────────────────────────────────────────
-# one shared LLM instance used for all grading calls
 def _get_llm():
     return ChatGroq(
         api_key=GROQ_API_KEY,
@@ -18,9 +17,18 @@ def _get_llm():
 # ── helpers ─────────────────────────────────────────────────
 
 def _load_json(path: str) -> dict:
-    # generic loader for any json file
     with open(Path(path)) as f:
         return json.load(f)
+
+
+def _chunk_content_for_question(source_chunk_id: str, session_id: str | None) -> str:
+    chunk_ids = [cid.strip() for cid in source_chunk_id.split(",") if cid.strip()]
+    parts = []
+    for chunk_id in chunk_ids:
+        chunk = get_chunk_by_id(chunk_id, session_id=session_id)
+        if chunk:
+            parts.append(chunk.content)
+    return "\n\n".join(parts) if parts else "no notes available for this topic"
 
 def _grade_answer(
     question: Question,
@@ -98,19 +106,18 @@ def run_corrector(
         from agents.answer_loader import load_answers
         answers = load_answers() if answers_path is None else _load_json(answers_path)
 
-    # build a quick lookup: question_id -> student answer
+    lookup_session_id = session_id or exam.session_id
     answer_map = {a["question_id"]: a["student_answer"] for a in answers["answers"]}
 
-    results          = []
+    results = []
     topics_to_review = []
 
     for question in exam.questions:
-
         student_answer = answer_map.get(question.question_id, "")
-
-        # get the relevant note chunk for this question from MCP
-        chunk = get_chunk_by_id(question.source_chunk_id)
-        chunk_content = chunk.content if chunk else "no notes available for this topic"
+        chunk_content = _chunk_content_for_question(
+            question.source_chunk_id,
+            lookup_session_id,
+        )
 
         # grade the answer
         result = _grade_answer(question, student_answer, chunk_content)

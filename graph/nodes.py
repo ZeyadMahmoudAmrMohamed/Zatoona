@@ -1,35 +1,26 @@
-import json
-from pathlib import Path
-
 from agents.generator_agent import generate_exam
 from agents.validator_agent import validate_exam
-from config.settings import MOCK_MCP_PATH
 from graph.state import ExamState
+from mcp_server.tools.retrieval_tool import get_relevant_chunks
 from schemas.exam_object import ExamObject
 from schemas.note_chunk import NoteChunk
 
 
-def _load_mock_chunks(session_id: str, topics: list[str]) -> list[NoteChunk]:
-    path = Path(MOCK_MCP_PATH)
-    with path.open(encoding="utf-8") as f:
-        data = json.load(f)
-
-    chunks = [NoteChunk(**chunk) for chunk in data["chunks"]]
-    topic_set = {t.lower() for t in topics}
-
-    return [
-        c
-        for c in chunks
-        if c.session_id == session_id and c.topic.lower() in topic_set
-    ]
+def _fetch_chunks_for_session(session_id: str, topics: list[str]) -> list[NoteChunk]:
+    """Load note chunks from ChromaDB for each topic (deduped by chunk_id)."""
+    by_id: dict[str, NoteChunk] = {}
+    for topic in topics:
+        for chunk in get_relevant_chunks(topic, session_id=session_id):
+            by_id[chunk.chunk_id] = chunk
+    return list(by_id.values())
 
 
 def fetch_chunks(state: ExamState) -> dict:
-    chunks = _load_mock_chunks(state["session_id"], state["topics"])
+    chunks = _fetch_chunks_for_session(state["session_id"], state["topics"])
     if not chunks:
         raise ValueError(
             f"No chunks found for session '{state['session_id']}' "
-            f"and topics {state['topics']}"
+            f"and topics {state['topics']}. Upload notes first via /upload."
         )
     return {"chunks": chunks}
 

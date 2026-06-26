@@ -20,7 +20,7 @@ def _session_dir(session_id):
 
 
 def get_client(session_id=None):
-    session_id = session_id or settings.SESSION_ID
+    session_id = session_id #or settings.SESSION_ID
     if session_id not in _clients:
         _clients[session_id] = chromadb.PersistentClient(path=_session_dir(session_id))
     return _clients[session_id]

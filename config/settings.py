@@ -40,6 +40,33 @@ MIN_CHUNK_CHARS        = int(os.getenv("MIN_CHUNK_CHARS", "0"))
 SESSION_ID             = os.getenv("SESSION_ID", "default")
 SESSION_RESET          = os.getenv("SESSION_RESET_ON_START", "true").lower() == "true"
 
+# ── Docling / document parsing
+DOCLING_OCR_ENGINE = os.getenv(
+    "DOCLING_OCR_ENGINE", os.getenv("OCR_PROVIDER", "rapidocr")
+).lower()
+DOCLING_DO_OCR = os.getenv("DOCLING_DO_OCR", "true").lower() == "true"
+DOCLING_BITMAP_AREA_THRESHOLD = float(os.getenv("DOCLING_BITMAP_AREA_THRESHOLD", "0.05"))
+
+# ── Chunking
+CHUNK_MODE = os.getenv("CHUNK_MODE", "hybrid").lower()
+CHUNK_MAX_TOKENS = int(os.getenv("CHUNK_MAX_TOKENS", "512"))
+SEMANTIC_SIM_THRESHOLD = float(os.getenv("SEMANTIC_SIM_THRESHOLD", "0.5"))
+
+# ── Audio / video / YouTube ingestion
+ASR_PROVIDER = os.getenv("ASR_PROVIDER", "local").lower()
+ASR_MODEL = os.getenv("ASR_MODEL", "base")
+VIDEO_ENABLED = os.getenv("VIDEO_ENABLED", "false").lower() == "true"
+YOUTUBE_PLAYLIST_MAX = int(os.getenv("YOUTUBE_PLAYLIST_MAX", "50"))
+YOUTUBE_ASR_FALLBACK = os.getenv("YOUTUBE_ASR_FALLBACK", "false").lower() == "true"
+YOUTUBE_TRANSCRIPT_LANGS = [
+    lang.strip() for lang in os.getenv("YOUTUBE_TRANSCRIPT_LANGS", "en").split(",") if lang.strip()
+]
+
+# ── Web enrichment (optional)
+ENRICH_ENABLED = os.getenv("ENRICH_ENABLED", "false").lower() == "true"
+ENRICH_MAX_DOCS = int(os.getenv("ENRICH_MAX_DOCS", "5"))
+ENRICH_SEARCH_RESULTS = int(os.getenv("ENRICH_SEARCH_RESULTS", "3"))
+
 # ── Shared
 UI_PORT    = int(os.getenv("UI_PORT", "8501"))
 USE_REAL_MCP     = os.getenv("USE_REAL_MCP", "false").lower() == "true"

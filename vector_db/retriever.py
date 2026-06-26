@@ -134,5 +134,7 @@ def _rerank(query, candidates):
     scores = model.predict([(query, c["doc"]) for c in candidates])
     ranked = sorted(zip(scores, candidates), key=lambda x: x[0], reverse=True)
     if settings.RERANK_MIN_SCORE is not None:
-        ranked = [(score, c) for score, c in ranked if score >= settings.RERANK_MIN_SCORE]
+        filtered = [(score, c) for score, c in ranked if score >= settings.RERANK_MIN_SCORE]
+        if filtered:
+            ranked = filtered
     return [c for _, c in ranked]

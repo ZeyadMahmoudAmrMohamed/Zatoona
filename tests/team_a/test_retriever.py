@@ -129,3 +129,20 @@ def test_rerank_min_score_drops_weak_results(monkeypatch):
     ]
     out = [c["id"] for c in retriever._rerank("q", cands)]
     assert out == ["a", "c"]
+
+
+def test_rerank_min_score_falls_back_when_all_filtered(monkeypatch):
+    monkeypatch.setattr(retriever.settings, "RERANK_ENABLED", True)
+    monkeypatch.setattr(retriever.settings, "RERANK_MIN_SCORE", 0.0)
+
+    class FakeModel:
+        def predict(self, pairs):
+            return [-5.0, -8.0][: len(pairs)]
+
+    monkeypatch.setattr(retriever, "_get_reranker", lambda: FakeModel())
+    cands = [
+        {"id": "a", "doc": "x", "meta": {}},
+        {"id": "b", "doc": "y", "meta": {}},
+    ]
+    out = [c["id"] for c in retriever._rerank("q", cands)]
+    assert out == ["a", "b"]
