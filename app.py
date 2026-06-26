@@ -9,7 +9,6 @@ from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from pydantic import BaseModel
 
 from Authentication.database import Base, engine
-from Authentication.models import StoredExam  # noqa: F401 — register model with metadata
 from Authentication.models import User
 from Authentication.security import get_current_user
 from agents.corrector_agent import run_corrector
