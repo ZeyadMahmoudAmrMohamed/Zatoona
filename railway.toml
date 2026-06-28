@@ -4,4 +4,4 @@ dockerfilePath = "Dockerfile.app"
 
 [deploy]
 # Railway injects $PORT — fall back to 8001 for local docker compose
-startCommand = "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8001}"
+startCommand = "sh -c 'uvicorn app:app --host 0.0.0.0 --port $PORT'"
