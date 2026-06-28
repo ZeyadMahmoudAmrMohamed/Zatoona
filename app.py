@@ -6,6 +6,7 @@ from pathlib import Path
 
 import uvicorn
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from Authentication.auth_server import router as auth_router
@@ -39,6 +40,7 @@ async def lifespan(_app: FastAPI):
 
 
 app = FastAPI(title="Leo Agent API", lifespan=lifespan)
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 app.include_router(auth_router)
 
 
