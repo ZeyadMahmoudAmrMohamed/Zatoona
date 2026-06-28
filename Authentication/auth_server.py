@@ -2,7 +2,7 @@ import logging
 from datetime import datetime, timedelta
 
 import uvicorn
-from fastapi import Depends, FastAPI, Form, HTTPException, Request, status
+from fastapi import APIRouter, Depends, FastAPI, Form, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -33,8 +33,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
-Base.metadata.create_all(bind=engine)
+router = APIRouter()
 
 
 class RefreshRequest(BaseModel):
@@ -48,7 +47,7 @@ class TokenResponse(BaseModel):
     expires_in: int
 
 
-@app.get("/health")
+@router.get("/health")
 async def health_check():
     return {
         "status": "UP",
@@ -57,7 +56,7 @@ async def health_check():
     }
 
 
-@app.post("/auth/login", response_model=TokenResponse)
+@router.post("/auth/login", response_model=TokenResponse)
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
@@ -74,7 +73,7 @@ async def login(
     return TokenResponse(**issue_token_pair(db, user))
 
 
-@app.post("/auth/refresh", response_model=TokenResponse)
+@router.post("/auth/refresh", response_model=TokenResponse)
 async def refresh_tokens(body: RefreshRequest, db: Session = Depends(get_db)):
     user = validate_refresh_token(db, body.refresh_token)
 
@@ -89,7 +88,7 @@ async def refresh_tokens(body: RefreshRequest, db: Session = Depends(get_db)):
     )
 
 
-@app.post("/auth/logout")
+@router.post("/auth/logout")
 async def logout(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -101,7 +100,7 @@ async def logout(
     return {"message": "Successfully logged out"}
 
 
-@app.post("/auth/signup")
+@router.post("/auth/signup")
 async def signup(
     username: str = Form(...),
     email: str = Form(...),
@@ -126,7 +125,7 @@ async def signup(
     return {"message": "User created successfully"}
 
 
-@app.get("/auth/verify")
+@router.get("/auth/verify")
 async def verify_token(request: Request, db: Session = Depends(get_db)):
     """
     Verifies the JWT access token from the Authorization header.
@@ -162,4 +161,7 @@ async def verify_token(request: Request, db: Session = Depends(get_db)):
 
 
 if __name__ == "__main__":
+    app = FastAPI()
+    Base.metadata.create_all(bind=engine)
+    app.include_router(router)
     uvicorn.run(app, host="0.0.0.0", port=8000)
