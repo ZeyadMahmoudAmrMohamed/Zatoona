@@ -1,3 +1,5 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
@@ -15,7 +17,7 @@ def _postgresql_url(url: str) -> str:
 
 
 engine = create_engine(
-    _postgresql_url(settings.database_url),
+    _postgresql_url(os.getenv("DATABASE_URL") or settings.database_url),
     pool_pre_ping=True,
     pool_size=5,
     max_overflow=10,

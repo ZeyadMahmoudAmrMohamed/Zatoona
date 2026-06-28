@@ -8,6 +8,7 @@ import uvicorn
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from pydantic import BaseModel
 
+from Authentication.auth_server import router as auth_router
 from Authentication.database import Base, engine
 from Authentication.models import User
 from Authentication.security import get_current_user
@@ -38,6 +39,7 @@ async def lifespan(_app: FastAPI):
 
 
 app = FastAPI(title="Leo Agent API", lifespan=lifespan)
+app.include_router(auth_router)
 
 
 class GenerateExamRequest(BaseModel):
